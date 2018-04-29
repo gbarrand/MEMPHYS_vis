@@ -1,0 +1,74 @@
+#!/bin/sh -f
+
+# exa : ./build_lib_MEMPHYS -bin_x11
+
+. ./find_bush
+
+. ${bush_home}/args
+. ${bush_home}/g4args
+
+#. ${bush_home}/ourex_header
+. ${bush_home}/app_header_use  # execute same header than app to have same bin directory.
+
+libname=MEMPHYS
+
+build_shlib=no
+
+if [ ${build_compile} = "yes" ] ; then
+
+build_use_wroot=yes    
+if [ ${build_use_wroot} = yes ] ; then    
+  cppflags="${cppflags} -DAPP_USE_INLIB_WROOT"
+  use_exlib=yes
+  use_zlib=yes
+  . ${bush_home}/use/exlib
+  . ${bush_home}/use/zlib
+fi
+
+MEMPHYS_home=../../MEMPHYS
+
+cppfiles=
+
+cppfiles="${cppfiles} ${MEMPHYS_home}/source/PhysicsList.cpp"
+cppfiles="${cppfiles} ${MEMPHYS_home}/source/Analysis.cpp"
+cppfiles="${cppfiles} ${MEMPHYS_home}/source/DetectorConstruction.cpp"
+cppfiles="${cppfiles} ${MEMPHYS_home}/source/DetectorMessenger.cpp"
+cppfiles="${cppfiles} ${MEMPHYS_home}/source/EventAction.cpp"
+cppfiles="${cppfiles} ${MEMPHYS_home}/source/PhysicsMessenger.cpp"
+cppfiles="${cppfiles} ${MEMPHYS_home}/source/PrimaryGeneratorAction.cpp"
+cppfiles="${cppfiles} ${MEMPHYS_home}/source/PrimaryGeneratorMessenger.cpp"
+cppfiles="${cppfiles} ${MEMPHYS_home}/source/RunAction.cpp"
+cppfiles="${cppfiles} ${MEMPHYS_home}/source/RunActionMessenger.cpp"
+cppfiles="${cppfiles} ${MEMPHYS_home}/source/StackingAction.cpp"
+cppfiles="${cppfiles} ${MEMPHYS_home}/source/SteppingAction.cpp"
+cppfiles="${cppfiles} ${MEMPHYS_home}/source/TrackInformation.cpp"
+cppfiles="${cppfiles} ${MEMPHYS_home}/source/TrackingAction.cpp"
+cppfiles="${cppfiles} ${MEMPHYS_home}/source/TrackingActionMessenger.cpp"
+cppfiles="${cppfiles} ${MEMPHYS_home}/source/Trajectory.cpp"
+cppfiles="${cppfiles} ${MEMPHYS_home}/source/WCDigi.cpp"
+cppfiles="${cppfiles} ${MEMPHYS_home}/source/WCDigitizer.cpp"
+cppfiles="${cppfiles} ${MEMPHYS_home}/source/WCHit.cpp"
+cppfiles="${cppfiles} ${MEMPHYS_home}/source/WCSD.cpp"
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+use_inlib=yes
+use_geant4=yes
+
+. ./use_geant4
+
+. ${bush_home}/use/inlib
+
+#////////////////////////////////////
+#////////////////////////////////////
+#////////////////////////////////////
+
+. ${bush_home}/compile
+
+fi # end build_compile
+ 
+if [ ${build_archive} = "yes" ] ; then . ${bush_home}/archive; fi
+
+. ${bush_home}/clean
