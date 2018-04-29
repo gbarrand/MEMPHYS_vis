@@ -562,7 +562,8 @@ public:
   }
 protected:
   viewer(const viewer& a_from)
-  :parent(a_from)
+  :ui(a_from)
+  ,parent(a_from)
   ,parent_evd(a_from)
   ,parent_plotarea(a_from)
   ,parent_wall(a_from)

@@ -80,7 +80,8 @@ public:
     return true;
   }
 public:
-  opener(MEMPHYS::PrimaryGeneratorAction& m_primary_generator_action):m_primary_generator_action(m_primary_generator_action) {
+  opener(MEMPHYS::PrimaryGeneratorAction& a_primary_generator_action)
+  :m_primary_generator_action(a_primary_generator_action) {
 #ifdef INLIB_MEM
     inlib::mem::increment(s_class().c_str());
 #endif

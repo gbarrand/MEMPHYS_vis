@@ -395,7 +395,8 @@ public:
   }
 protected:
   main(const main& a_from)
-  :parent_pre_main(a_from)
+  :inlib::sg::ui(a_from)
+  ,parent_pre_main(a_from)
   ,parent_run_manager()
   ,parent_viewer(a_from)
   ,m_analysis(0)
