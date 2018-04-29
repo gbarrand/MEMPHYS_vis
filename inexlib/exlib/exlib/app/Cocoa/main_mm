@@ -340,7 +340,7 @@ int exlib_main(const std::string& a_app_name,int argc, char** argv,bool a_land =
 
   APP_CONTEXT context(res_dir);
 
-  app_Cocoa::main<APP_MAIN> _main(nsout,data_dir,res_dir,out_dir,tmp_dir,view);
+  app_Cocoa::main<APP_MAIN> _main(nsout,data_dir,res_dir,out_dir,tmp_dir,view,verbose);
 
  {std::string DOCUMENT;
   args.files_at_end(); //take care of the upper -land.

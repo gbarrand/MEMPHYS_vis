@@ -59,13 +59,14 @@ public:
        const std::string& a_res_dir,
        const std::string& a_out_dir,
        const std::string& a_tmp_dir,
-       GLView* a_GLView)
+       GLView* a_GLView,
+       bool a_verbose)
   :parent_pv_holder(a_out)
   ,APP_MAIN(a_out,
             parent_pv_holder::m_mgr_gra,
             parent_pv_holder::m_ttf,
             parent_pv_holder::m_selection,
-            a_data_dir,a_res_dir,a_out_dir,a_tmp_dir,false,0)
+            a_data_dir,a_res_dir,a_out_dir,a_tmp_dir,a_verbose,0)
   ,m_GLView(a_GLView)
   {
     parent::push_home();
