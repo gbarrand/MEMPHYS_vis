@@ -35,16 +35,16 @@
  ///////////////////////////////////////////////////////////////////////////////////////////////////////
  ///////////////////////////////////////////////////////////////////////////////////////////////////////
  ///////////////////////////////////////////////////////////////////////////////////////////////////////
- To run from the build area :
-    UNIX> ./bin_<config>/distrib/MEMPHYS_vis/<version>/bin/MEMPHYS_vis # for Linux/X11, macOS/X11, Windows-10/cygwin versions.
+ To run from the build area the Linux/X11, macOS/X11, Windows-10/cygwin versions :
+    UNIX> ./bin_<config>/distrib/MEMPHYS_vis/<version>/bin/MEMPHYS_vis
  and for the macOS/Cocoa version :
     UNIX> ./bin_<config>/distrib/MEMPHYS_vis/<version>/bin/MEMPHYS_vis -verbose  # to have Geant4 ouput.
   Darwin> open ./bin_<config>/distrib/MEMPHYS_vis/<version>/MEMPHYS_vis.app
 
  WARNING, WARNING, WARNING, WARNING, WARNING, WARNING, WARNING, WARNING, WARNING :
-  If running from the build area by having done the "source geant4 setup", be sure that the environment variables :
- G4NEUTRONHPDATA, G4LEDATA, G4LEVELGAMMADATA, G4ENSDFSTATEDATA, G4SAIDXSDATA points to valid Geant4 data directories. If not,
- you are going to have crashes at startup.
+  If running from the build area by having done the "source geant4 setup", be sure that the
+ environment variables : G4NEUTRONHPDATA, G4LEDATA, G4LEVELGAMMADATA, G4ENSDFSTATEDATA, G4SAIDXSDATA
+ points to valid Geant4 data directories. If not, you are going to have crashes at startup.
 
  ///////////////////////////////////////////////////////////////////////////////////////////////////////
  ///////////////////////////////////////////////////////////////////////////////////////////////////////
