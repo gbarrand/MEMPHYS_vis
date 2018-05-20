@@ -273,13 +273,13 @@ public:
     m_out_dir = a_out_dir;
     m_tmp_dir = a_tmp_dir;
 
-   {std::string pwd;
-    if(!inlib::dir::pwd(pwd)) {
+   {std::string _pwd;
+    if(!inlib::dir::pwd(_pwd)) {
       m_out << "MEMPHYS_vis::main::main : can't get pwd." << std::endl;
     } else {
-      //m_out << "pwd : " << pwd << std::endl;
+      //m_out << "pwd : " << _pwd << std::endl;
     }
-    m_pwd = pwd;}
+    m_pwd = _pwd;}
 
     m_image_readers.add_reader(inlib::file::s_format_jpeg(),new exlib::jpeg::reader());
     m_image_readers.add_reader(inlib::file::s_format_png(),new exlib::png::reader());
