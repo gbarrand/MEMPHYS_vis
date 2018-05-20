@@ -912,8 +912,8 @@ protected:
     if(!event) return;
     
     inlib::xml::styles::style_t def_sty;
-    map_sty_t styles;
-    get_particles_styles(s_primary(),styles,def_sty);
+    map_sty_t _styles;
+    get_particles_styles(s_primary(),_styles,def_sty);
 
     inlib::sg::group* sep = new inlib::sg::separator;
 
@@ -939,7 +939,7 @@ protected:
             bool show_name;
             float text_scale;
             bool at_end;
-            find_particle_style(styles,def_sty,spart,col,show_name,text_scale,at_end);
+            find_particle_style(_styles,def_sty,spart,col,show_name,text_scale,at_end);
 
             if(show_name) {
               add_marker_text(*sep,float(x),float(y),float(z),col,text_scale,spart);
