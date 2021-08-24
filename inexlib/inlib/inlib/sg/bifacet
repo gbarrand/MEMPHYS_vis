@@ -36,14 +36,14 @@ private:
   }
 public:
   virtual void render(render_action& a_action) {
-    float tris[18];float nms[18];  
+    float tris[18];float nms[18];
     _front_tris(tris,nms);
     a_action.draw_vertex_normal_array(gl::triangles(),18,tris,nms);
     _back_tris(tris,nms);
     a_action.draw_vertex_normal_array(gl::triangles(),18,tris,nms);
   }
   virtual void pick(pick_action& a_action) {
-    float tris[18];float nms[18];  
+    float tris[18];float nms[18];
     _front_tris(tris,nms);
     a_action.add__triangles(*this,18,tris,true);
     _back_tris(tris,nms);
@@ -186,7 +186,7 @@ protected:
     lines[21] = front[0];
     lines[22] = front[1];
     lines[23] = front[2];
-  }   
+  }
 
   void _back_face(float front[]) { //[12]
     float w2 = width.value()*0.5f;
