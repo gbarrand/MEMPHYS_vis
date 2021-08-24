@@ -1,3 +1,9 @@
+12.0.0:
+- have GUI done with insh.
+- startup.insh, event.insh.
+- cleanup MEMPHYS_vis/main to have mainly MEMPHYS sim init and declaration of insh commands.
+- have insh and -terminal mode.
+
 11.2.0 :
 - have inexlib/ourex/geant4.10.03.p01 : clearly users have problems to build
   by using a "sys geant4" (a pre installed geant4). Then we restore a more
