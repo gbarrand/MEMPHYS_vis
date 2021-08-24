@@ -30,25 +30,8 @@ MEMPHYS_home=../../MEMPHYS
 cppfiles=
 
 cppfiles="${cppfiles} ${MEMPHYS_home}/source/PhysicsList.cpp"
-cppfiles="${cppfiles} ${MEMPHYS_home}/source/Analysis.cpp"
 cppfiles="${cppfiles} ${MEMPHYS_home}/source/DetectorConstruction.cpp"
-cppfiles="${cppfiles} ${MEMPHYS_home}/source/DetectorMessenger.cpp"
 cppfiles="${cppfiles} ${MEMPHYS_home}/source/EventAction.cpp"
-cppfiles="${cppfiles} ${MEMPHYS_home}/source/PhysicsMessenger.cpp"
-cppfiles="${cppfiles} ${MEMPHYS_home}/source/PrimaryGeneratorAction.cpp"
-cppfiles="${cppfiles} ${MEMPHYS_home}/source/PrimaryGeneratorMessenger.cpp"
-cppfiles="${cppfiles} ${MEMPHYS_home}/source/RunAction.cpp"
-cppfiles="${cppfiles} ${MEMPHYS_home}/source/RunActionMessenger.cpp"
-cppfiles="${cppfiles} ${MEMPHYS_home}/source/StackingAction.cpp"
-cppfiles="${cppfiles} ${MEMPHYS_home}/source/SteppingAction.cpp"
-cppfiles="${cppfiles} ${MEMPHYS_home}/source/TrackInformation.cpp"
-cppfiles="${cppfiles} ${MEMPHYS_home}/source/TrackingAction.cpp"
-cppfiles="${cppfiles} ${MEMPHYS_home}/source/TrackingActionMessenger.cpp"
-cppfiles="${cppfiles} ${MEMPHYS_home}/source/Trajectory.cpp"
-cppfiles="${cppfiles} ${MEMPHYS_home}/source/WCDigi.cpp"
-cppfiles="${cppfiles} ${MEMPHYS_home}/source/WCDigitizer.cpp"
-cppfiles="${cppfiles} ${MEMPHYS_home}/source/WCHit.cpp"
-cppfiles="${cppfiles} ${MEMPHYS_home}/source/WCSD.cpp"
 
 #////////////////////////////////////
 #////////////////////////////////////

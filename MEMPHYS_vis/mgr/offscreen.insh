@@ -1,0 +1,23 @@
+#!insh
+
+startup.insh
+gui_hide_main_menu
+
+plots_hide
+g4_beam_on
+scene_write_to_paper -format=inzb_ps out.ps
+scene_write_to_paper -format=inzb_png out.png
+
+plots_show
+scene_write_to_paper -format=inzb_ps out_plots.ps
+scene_write_to_paper -format=inzb_png out_plots.png
+
+plots_map_viewer
+scene_clear_dynamic
+scene_clear_static
+scene_write_to_paper -format=inzb_ps out_edep.ps
+scene_write_to_paper -format=inzb_png out_edep.png
+
+icon.insh
+scene_write_to_paper -format=inzb_ps out_icon.ps
+scene_write_to_paper -format=inzb_png out_icon.png
