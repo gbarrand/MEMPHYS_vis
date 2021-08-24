@@ -1,0 +1,22 @@
+#!insh
+
+scene_clear_dynamic
+
+app_vis_beam_and_target
+
+m=`unit m`
+radius=`calc 0.05*${m}`  # PM size 0.15*CLHEP::m.
+g4_vis_primary_vertices -style=primary_vertex -radius=${radius}
+
+g4_vis_trajectories -pickable -primaries
+
+app_vis_trajectories_end_direction -primaries
+
+app_vis_hits_collection WCPMT
+
+app_vis_digis_collection WCDigitizedCollection
+
+histo_reset edep
+app_hits_fill -histo=edep WCPMT
+
+unset radius m

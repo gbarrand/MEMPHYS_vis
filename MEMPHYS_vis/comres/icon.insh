@@ -1,0 +1,34 @@
+#!insh
+
+camera_set_ortho 4
+
+z=2
+
+camera_set_znear `calc 0.01*${z}`
+camera_set_zfar `calc 100.0*${z}`
+camera_set_focal ${z}
+camera_set_dx `calc 0.003*${z}`
+camera_set_da 0.017  # one degree.
+
+camera_set_position 0 0 ${z}
+
+scene_clear_static
+scene_clear_dynamic
+
+node_create -class=inlib::sg::matrix icon_matrix
+node_matrix_set -scale=1.1 icon_matrix
+scene_add_managed_object -static icon_matrix
+
+node_create -class=inlib::sg::ring -rmin=1.5 -rmax=1.6 icon_ring
+scene_add_managed_object -static -color=red icon_ring
+
+scene_add_text_freetype -static -uniline=nu -color=yellow -inlib::sg::base_text.hjust=1 -scale=4 -translate='0 -1 0'
+
+plots_hide
+
+gui_hide_console
+gui_hide_camera_menu
+gui_hide_main_menu
+
+
+

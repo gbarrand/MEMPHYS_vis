@@ -1,0 +1,53 @@
+#!insh
+
+scene_set_clear_color black
+
+scene_create
+plots_create  # must be after scene_create
+
+camera_default.insh
+
+#///////////////////////////////////////
+#/// histos: ////////////////////////////
+#///////////////////////////////////////
+#///////////////////////////////////////
+histo_create -class=h1d -title='hits edep (eV)' -xbins=100 -xmin=0 -xmax=5 edep
+
+#///////////////////////////////////////
+#///////////////////////////////////////
+g4_vis_geometry -max_depth=3 -full_wire_frame
+
+#///////////////////////////////////////
+#/// style:  ///////////////////////////
+#///////////////////////////////////////
+style_create -color=cyan   primary_vertex
+style_create -color=yellow -show_name=true -text_scale=5 -at_end=true primary.default
+
+style_create -color=grey    trajectory.default
+style_create -color=green   trajectory.e+
+style_create -color=green   trajectory.e-
+style_create -color=blue    trajectory.gamma
+style_create -color=magenta trajectory.opticalphoton
+    
+#///////////////////////////////////////
+#/// plots: ////////////////////////////
+#///////////////////////////////////////
+plots_show
+
+plots_set_grid 1 1
+plots_clear
+
+plots_set_layout 0.3 0.35 0.3 0.2   # up right.
+
+plots_set_field inlib::sg::plots.border_visible 1
+plots_set_field inlib::sg::plots.border_width   0.02
+plots_set_field inlib::sg::plots.border_height  0.02
+
+plotter_set_field background_style.visible true
+
+histo_plot -ref edep
+
+#///////////////////////////////////////
+#///////////////////////////////////////
+#///////////////////////////////////////
+#gui_hide_main_menu

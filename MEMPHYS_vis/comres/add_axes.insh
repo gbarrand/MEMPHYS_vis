@@ -1,0 +1,13 @@
+#!insh
+
+alias geo_field='rroot_geo_field -geo=geo_manager'
+
+m=`unit m`
+scale=`calc 50.0*${m}`
+axis_max=50
+
+scene_add_axes -scale=${scale} -x_title='x (m)' -x_max=${axis_max} -y_title='y (m)' -y_max=${axis_max} -z_title='z (m)' -z_max=${axis_max}
+
+unset m scale axis_max
+
+unalias geo_field

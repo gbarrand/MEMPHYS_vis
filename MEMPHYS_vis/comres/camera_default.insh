@@ -1,0 +1,19 @@
+#!insh
+
+m=`unit m`
+z=`calc 70.0*${m}`
+
+camera_set_ortho `calc 1.4*${z}`
+
+camera_set_znear `calc 0.01*${z}`
+camera_set_zfar `calc 100.0*${z}`
+camera_set_focal ${z}
+
+camera_set_dx `calc 0.003*${z}`
+camera_set_da 0.017  # one degree.
+
+# position on +x axis, and have +z upward :
+camera_set_position ${z} 0 0
+camera_set_orientation 0 0 -1 -1 0 0
+camera_set_orientation -multiply 0 1 0 0 0 1
+
