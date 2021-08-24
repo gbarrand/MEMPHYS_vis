@@ -15,7 +15,8 @@
 <div class="textblock"><p>The simulation code itself is under the MEMPHYS_vis/MEMPHYS directory.</p>
 <p>Here you will find the classes describing the detector construction (MEMPHYS/DetectorConstruction[.h,.cc]), the event action (MEMPHYS/EventAction[.h,.cc]), stepping action, primary generator, etc...</p>
 <p>From this, MEMPHYS_vis initialises the simulation in the 'Geant4 traditional way of doing' in the MEMPHYS_vis/main class constructor. Someone familiar with Geant4 examples should not be lost here. (All the insh commands known by the program are declared also here).</p>
-<p>Today the geometry is compiled, then to modify it, you have to change the code in MEMPHYS_vis/MEMPHYS and rebuild the application. But good part of the MEMPHYS classes have 'messengers' (Geant4 commands), and then a lot of customization could be done through them (in particular with the insh 'g4_apply_command' command) without having to rebuild the application. </p>
+<p>Today the geometry is compiled, then to modify it, you have to change the code in MEMPHYS_vis/MEMPHYS and rebuild the application. But good part of the MEMPHYS classes have 'messengers' (Geant4 commands), and then a lot of customization could be done through them (in particular with the insh 'g4_apply_command' command) without having to rebuild the application.</p>
+<p>Note that during the simulation initialisation, the files job_options.mac and init.g4m containing Geant4 commands are, if found, executed. They are searched in the user document directory and then in the internal resource directory of the application. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 
