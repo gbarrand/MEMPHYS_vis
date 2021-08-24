@@ -214,7 +214,7 @@ if [ ${app} = MEMPHYS_vis ] ; then
   /bin/cp -R ../../MEMPHYS/MEMPHYS ${to}/MEMPHYS/.
   /bin/cp -R ../../MEMPHYS/source  ${to}/MEMPHYS/.
   /bin/cp ../doc/README_for_pack ${to}/README
-  /bin/cp ${bush_home}/app_README_g4 ${to}/README
+  #/bin/cp ${bush_home}/app_README_g4 ${to}/README
 fi
 
 if [ ${app} = TouchSky ] ; then
