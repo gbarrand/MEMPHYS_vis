@@ -1,0 +1,711 @@
+// Copyright (C) 2010, Guy Barrand. All rights reserved.
+// See the file MEMPHYS_vis.license for terms.
+
+#ifndef MEMPHYS_vis_insh
+#define MEMPHYS_vis_insh
+
+#include <exlib/sg/text_freetype_marker>
+
+#include <inlib/insh/ishell>
+#include <inlib/sg/view_evd>
+#include <inlib/sg/view_sg_client>
+#include <inlib/sg/text_dumper>
+#include <inlib/sg/hep_arrow>
+
+#include <MEMPHYS/PrimaryGeneratorAction.hh>
+
+namespace MEMPHYS_vis {
+
+inline void insh_app_vis_beam_and_target(inlib::ishell& a_insh,const std::vector<std::string>& a_args,inlib::sg::gui_viewer& a_gv) {
+  static const std::string s_cmd("app_vis_beam_and_target");
+  inlib::sg::view_evd* _evd = inlib::sg::cast_view_evd(a_gv);
+  if(!_evd) return;
+
+  G4RunManager* rmgr = G4RunManager::GetRunManager();
+  if(!rmgr) {
+    a_insh.warn(s_cmd+": G4RunManager::GetRunManager() is null.");
+    return;
+  }
+  
+  G4VUserPrimaryGeneratorAction* pga =
+    const_cast<G4VUserPrimaryGeneratorAction*>(rmgr->GetUserPrimaryGeneratorAction());
+  if(!pga) {
+    a_insh.warn(s_cmd+": no primary generator.");
+    return;
+  }
+  MEMPHYS::PrimaryGeneratorAction* pg = dynamic_cast<MEMPHYS::PrimaryGeneratorAction*>(pga);
+  if(!pg) {
+    a_insh.warn(s_cmd+": primary generator not a MEMPHYS::PrimaryGeneratorAction.");
+    return;
+  }
+
+  G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
+  if(!particleTable) {
+    a_insh.warn(s_cmd+": no particle table.");
+    return;
+  }
+  
+  //////////////////////////////////////
+  //// args: ///////////////////////////
+  //////////////////////////////////////
+  inlib::args _args(a_args);
+
+  INLIB_ISHELL_GET_PLACEMENT_DYNAMIC
+  INLIB_ISHELL_ARGS_UNEXPECTED
+  //////////////////////////////////////
+  //////////////////////////////////////
+  //////////////////////////////////////
+
+  G4ThreeVector vtx = pg->GetVtx(); //beam and target point toward vtx.
+
+  float length = 2*float(CLHEP::m);
+  float radius = 0.01f*float(CLHEP::m);
+
+  inlib::colorf col = inlib::colorf_cyan();
+  //bool show_name;
+  float text_scale = 5;
+  //bool at_end;
+  //find_particle_style(prim_styles,prim_def_sty,
+  //                    obj->GetParticleName(),
+  //                    col,show_name,text_scale,at_end);
+
+  inlib::sg::separator* sep = new inlib::sg::separator;
+
+  exlib::sg::text_freetype_marker ttf_marker;
+  
+  /////////////////////////////////////////////////////////////////////////
+  /// beam : //////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////
+ {G4int pdg = pg->GetBeamPDG();
+  std::string name("?");
+ {G4ParticleDefinition* partDef = particleTable->FindParticle(pdg);
+  if(partDef) name = partDef->GetParticleName();}
+
+  G4ThreeVector dir = pg->GetBeamDir().unit();
+  double energy = pg->GetBeamEnergy();
+
+  /////////////////////////////////////
+  //////// picking infos : ////////////
+  /////////////////////////////////////
+  inlib::sg::infos* infos = new inlib::sg::infos;
+    
+ {std::string sobj;
+  inlib::p2s(infos,sobj); //as we have no "beam" object we use the infos node as the key in the dumpers() map.
+  infos->strings.add(sobj);
+  infos->strings.add("no_tag");
+	  
+  std::vector<std::string> vinfos;
+  vinfos.push_back(name);
+
+ {std::string sval("direction : ");
+  inlib::numas(dir.x(),sval);
+  sval += " ";
+  inlib::numas(dir.y(),sval);
+  sval += " ";
+  inlib::numas(dir.z(),sval);
+  vinfos.push_back(sval);}
+    
+ {std::string sval("energy (MeV) : ");
+  inlib::numas(energy,sval);
+  vinfos.push_back(sval);}
+    
+  a_gv.add_dumper(sobj,new inlib::sg::text_dumper(a_gv,vinfos));}
+  /////////////////////////////////////
+  /////////////////////////////////////
+  float begx = float(vtx.x()-length*dir.x());
+  float begy = float(vtx.y()-length*dir.y());
+  float begz = float(vtx.z()-length*dir.z());
+
+  inlib::sg::separator* _arrow =
+    inlib::sg::create_arrow(inlib::vec3f(begx,begy,begz),
+                            inlib::vec3f(float(dir.x()),float(dir.y()),float(dir.z())),
+			    length,radius,true,
+                            name,text_scale,0.0f,
+                            ttf_marker,col,infos);
+  if(_arrow) sep->add(_arrow);}
+
+  /////////////////////////////////////////////////////////////////////////
+  /// target : ////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////
+ {G4int pdg = pg->GetTargetPDG();
+  if(pdg) {
+  std::string name("?");
+ {G4ParticleDefinition* partDef = particleTable->FindParticle(pdg);
+  if(partDef) name = partDef->GetParticleName();}
+
+  G4ThreeVector dir = pg->GetTargetDir().unit();
+  double energy = pg->GetTargetEnergy();
+
+  /////////////////////////////////////
+  //////// picking infos : ////////////
+  /////////////////////////////////////
+  inlib::sg::infos* infos = new inlib::sg::infos;
+    
+ {std::string sobj;
+  inlib::p2s(infos,sobj); //as we have no "target" object we use the infos node as the key in the dumpers() map.
+  infos->strings.add(sobj);
+  infos->strings.add("no_tag");
+	  
+  std::vector<std::string> vinfos;
+  vinfos.push_back(name);
+
+ {std::string sval("direction : ");
+  inlib::numas(dir.x(),sval);
+  sval += " ";
+  inlib::numas(dir.y(),sval);
+  sval += " ";
+  inlib::numas(dir.z(),sval);
+  vinfos.push_back(sval);}
+    
+ {std::string sval("energy (MeV) : ");
+  inlib::numas(energy,sval);
+  vinfos.push_back(sval);}
+    
+  a_gv.add_dumper(sobj,new inlib::sg::text_dumper(a_gv,vinfos));}
+  /////////////////////////////////////
+  /////////////////////////////////////
+    
+  float begx = float(vtx.x()-length*dir.x());
+  float begy = float(vtx.y()-length*dir.y());
+  float begz = float(vtx.z()-length*dir.z());
+
+  inlib::sg::separator* _arrow =
+    inlib::sg::create_arrow(inlib::vec3f(begx,begy,begz),
+                            inlib::vec3f(float(dir.x()),float(dir.y()),float(dir.z())),
+			    length,radius,true,
+                            name,text_scale,0.0f,
+                            ttf_marker,col,infos);
+  if(_arrow) sep->add(_arrow);}}
+	      
+  INLIB_ISHELL_SEP_PLACEMENT
+}
+
+}
+
+#include <MEMPHYS/Trajectory.hh>
+#include <inlib/particle_style>
+#include <inlib/insh/args_to_style>
+
+namespace MEMPHYS_vis {
+
+inline void insh_app_vis_trajectories_end_direction(inlib::ishell& a_insh,const std::vector<std::string>& a_args,inlib::sg::gui_viewer& a_gv) {
+  static const std::string s_cmd("app_vis_trajectories_end_direction");
+  inlib::sg::view_evd* _evd = inlib::sg::cast_view_evd(a_gv);
+  if(!_evd) return;
+
+  //////////////////////////////////////
+  //////////////////////////////////////
+  //////////////////////////////////////
+  G4RunManager* rmgr = G4RunManager::GetRunManager();
+  if(!rmgr) {
+    a_insh.warn(s_cmd+": G4RunManager::GetRunManager() is null.");
+    return;
+  }
+
+  const G4Event* event = rmgr->GetCurrentEvent();
+  if(!event) return;
+
+  ////////////////////////////////////////
+  /// args : /////////////////////////////
+  ////////////////////////////////////////
+  inlib::args _args(a_args);
+
+  bool primaries;
+  INLIB_ISHELL_IS_ARG(primaries)
+  
+  float length = 2*float(CLHEP::m);
+  INLIB_ISHELL_GET_ARG_FLOAT(length)
+  float radius = 0.01f*float(CLHEP::m);
+  INLIB_ISHELL_GET_ARG_FLOAT(radius)
+
+  INLIB_ISHELL_GET_PLACEMENT_DYNAMIC
+  INLIB_ISHELL_ARGS_UNEXPECTED
+  ////////////////////////////////////////
+  ////////////////////////////////////////
+  ////////////////////////////////////////
+  
+  TrajectoryVector* vec = 0;
+ {G4TrajectoryContainer* tcont = event->GetTrajectoryContainer();
+  if(!tcont) return;
+  vec = tcont->GetVector();
+  if(!vec) return;
+  if(vec->empty()) return;}
+
+  inlib::sg::separator* sep = new inlib::sg::separator;
+      
+  exlib::sg::text_freetype_marker ttf_marker;
+
+  //inlib::sg::draw_style* ds = new inlib::sg::draw_style;
+  //ds->style = inlib::sg::draw_lines;
+  //ds->line_width = 1;
+  //sep->add(ds);
+
+  inlib::xml::styles::style_t prim_def_sty;
+  inlib::map_sty_t prim_styles;
+  bool prim_found_style = inlib::get_particles_styles(a_gv.styles(),"primary",prim_styles,prim_def_sty);
+
+  inlib::xml::styles::style_t traj_def_sty;
+  inlib::map_sty_t traj_styles;
+  inlib::get_particles_styles(a_gv.styles(),"trajectory",traj_styles,traj_def_sty);
+
+ {inlib::colorf col;
+  bool show_name;
+  float text_scale;
+  bool at_end;
+  std::string name;
+  inlib_vforcit(G4VTrajectory*,*vec,it) {
+    G4VTrajectory* obj = *it;
+    MEMPHYS::Trajectory* _obj = dynamic_cast<MEMPHYS::Trajectory*>(obj);
+    if(!_obj) {
+      a_insh.warn(s_cmd+": G4VTrajectory not a MEMPHYS_vis::Trajectory.");
+      continue;
+    }
+
+    if(primaries) {
+      if(obj->GetParentID()) continue;
+    }
+
+    if(!obj->GetParentID() && prim_found_style) {
+      inlib::find_particle_style(a_gv.styles(),prim_styles,prim_def_sty,
+                                 obj->GetParticleName(),
+                                 col,show_name,text_scale,at_end);
+    } else {
+      inlib::find_particle_style(a_gv.styles(),traj_styles,traj_def_sty,
+                                 obj->GetParticleName(),
+                                 col,show_name,text_scale,at_end);
+    }
+
+    int pointn = obj->GetPointEntries();
+    if(pointn<=0) continue;
+
+    const G4ThreeVector& pos = _obj->GetStoppingPoint();
+    const G4ThreeVector& dir = _obj->GetStoppingDirection();
+
+    inlib::sg::separator* _arrow =
+      inlib::sg::create_arrow(inlib::vec3f(float(pos.x()),float(pos.y()),float(pos.z())),
+                              inlib::vec3f(float(dir.x()),float(dir.y()),float(dir.z())),
+                              length,radius,true,
+                              name,text_scale,0.0f,
+                              ttf_marker,col,0);
+    if(_arrow) sep->add(_arrow);
+  }}
+
+  INLIB_ISHELL_SEP_PLACEMENT
+}
+
+}
+
+//#define USE_ATTDEF
+
+#ifdef USE_ATTDEF
+#else
+#include <MEMPHYS/WCHit.hh>
+#endif
+
+#include <exlib/geant4/utils>
+#include <exlib/geant4/transform>
+#include <inlib/sg/ring>
+#include <inlib/sg/bifacet>
+
+namespace MEMPHYS_vis {
+
+inline void insh_app_vis_hits_collection(inlib::ishell& a_insh,const std::vector<std::string>& a_args,inlib::sg::gui_viewer& a_gv) {
+  static const std::string s_cmd("app_vis_hits_collection");
+  inlib::sg::view_evd* _evd = inlib::sg::cast_view_evd(a_gv);
+  if(!_evd) return;
+
+  //////////////////////////////////////
+  //////////////////////////////////////
+  //////////////////////////////////////
+  G4RunManager* rmgr = G4RunManager::GetRunManager();
+  if(!rmgr) {
+    a_insh.warn(s_cmd+": G4RunManager::GetRunManager() is null.");
+    return;
+  }
+
+  ////////////////////////////////////////
+  /// args : /////////////////////////////
+  ////////////////////////////////////////
+  inlib::args _args(a_args);
+
+  std::string fnh;
+  if(!_args.first_not_hyphen(fnh)) {
+    a_insh.warn(s_cmd+": no hits collection name given.");
+    return;
+  }
+  _args.remove(fnh);
+
+  float WCPMTRadius = 0.15f*float(CLHEP::m);  // PMTs (12-inch)
+  INLIB_ISHELL_GET_ARG_FLOAT(WCPMTRadius)
+
+  std::string sshape("bifacet");
+  INLIB_ISHELL_GET_ARG_STRING(shape)
+  
+  INLIB_ISHELL_GET_PLACEMENT_DYNAMIC
+  INLIB_ISHELL_ARGS_UNEXPECTED
+  ////////////////////////////////////////
+  ////////////////////////////////////////
+  ////////////////////////////////////////
+  
+  G4VHitsCollection* collection = exlib::geant4::get_hits_collection(a_insh.out(),*rmgr,fnh);
+  if(!collection) {
+    a_insh.warn(s_cmd+": hits collection "+inlib::sout(fnh)+" not found.");
+    return;
+  }
+
+  exlib::geant4::transform _tsf;
+  inlib::colorf color;
+
+  size_t number = collection->GetSize();
+
+  //m_out << "MEMPHYS_vis::main::visualize_hits_collection : #hits " << number << std::endl;
+
+  for(size_t index=0;index<number;index++) {
+    G4VHit* obj = collection->GetHit(index);
+    if(!obj) continue;
+#ifdef USE_ATTDEF
+    G4LogicalVolume* lv = exlib::geant4::get_logical_volume(*obj); // The hit must have the "LV" and "TSF" AttDef.
+    if(!lv) {
+      a_insh.warn(s_cmd+": hit without G4LogicalVolume.");
+      continue;
+    }
+    G4Transform3D* tsf = exlib::geant4::get_transform3D(*obj);
+    if(!tsf) {
+      a_insh.warn(s_cmd+": hit without G4Transform3D.");
+      continue;
+    }
+    _tsf = *tsf;
+    G4VSolid* solid = lv->GetSolid();
+    if(!solid) {
+      a_insh.warn(s_cmd+": hit without G4Solid.");
+      continue;
+    }
+    G4Colour _color;
+    if(exlib::geant4::get_color(*obj,_color)) {
+      color =
+ inlib::colorf(float(_color.GetRed()),float(_color.GetGreen()),float(_color.GetBlue()),float(_color.GetAlpha()));
+    } else {
+      color = inlib::colorf_default();
+    }
+#else //!USE_ATTDEF
+    MEMPHYS::WCHit* _obj = dynamic_cast<MEMPHYS::WCHit*>(obj);
+    if(!_obj) {
+      a_insh.warn(s_cmd+": G4VHit is not a MEMPHYS::WCHit.");
+      continue;
+    }    	
+    G4LogicalVolume* lv = _obj->GetLogicalVolume();
+    if(!lv) {
+      a_insh.warn(s_cmd+": hit without G4LogicalVolume.");
+      continue;
+    }
+    G4VSolid* solid = lv->GetSolid();
+    if(!solid) {
+      a_insh.warn(s_cmd+": hit without G4Solid.");
+      continue;
+    }
+    const G4Transform3D& tsf = _obj->GetTransform();
+    _tsf = tsf;
+    const G4Colour& _color = _obj->GetColour();
+    color = inlib::colorf(float(_color.GetRed()),float(_color.GetGreen()),float(_color.GetBlue()),float(_color.GetAlpha()));
+#endif //USE_ATTDEF
+    //G4Material* material = lv->GetMaterial();
+  
+    inlib::sg::separator* sep = new inlib::sg::separator;
+        
+   {inlib::sg::rgba* mat = new inlib::sg::rgba();
+    mat->color = color;
+    sep->add(mat);}
+       
+   {inlib::sg::matrix* mtx = new inlib::sg::matrix;
+    _tsf.set_matrix(mtx->mtx.value());
+    sep->add(mtx);}
+
+    if(sshape=="ring") {
+      inlib::sg::ring* shape = new inlib::sg::ring;
+      shape->rmin = WCPMTRadius*0.5f;
+      shape->rmax = WCPMTRadius;
+      sep->add(shape);
+    } else if(sshape=="tube") {
+      inlib::sg::tube* shape = new inlib::sg::tube;
+      shape->height = WCPMTRadius*2;
+      shape->rmin = WCPMTRadius*0.5f;
+      shape->rmax = WCPMTRadius;
+      sep->add(shape);
+    } else {
+      inlib::sg::bifacet* shape = new inlib::sg::bifacet;
+      shape->width = 2.0f*WCPMTRadius;
+      shape->height = 2.0f*WCPMTRadius;
+      shape->depth = 2.0f*WCPMTRadius*0.02f;
+      sep->add(shape);
+    }
+
+    INLIB_ISHELL_SEP_PLACEMENT
+  }
+}
+
+}
+
+//#define USE_ATTDEF
+
+#ifdef USE_ATTDEF
+#else
+#include <MEMPHYS/WCDigi.hh>
+#endif
+
+namespace MEMPHYS_vis {
+
+inline void insh_app_vis_digis_collection(inlib::ishell& a_insh,const std::vector<std::string>& a_args,inlib::sg::gui_viewer& a_gv) {
+  static const std::string s_cmd("app_vis_digis_collection");
+  inlib::sg::view_evd* _evd = inlib::sg::cast_view_evd(a_gv);
+  if(!_evd) return;
+
+  //////////////////////////////////////
+  //////////////////////////////////////
+  //////////////////////////////////////
+  G4RunManager* rmgr = G4RunManager::GetRunManager();
+  if(!rmgr) {
+    a_insh.warn(s_cmd+": G4RunManager::GetRunManager() is null.");
+    return;
+  }
+
+  ////////////////////////////////////////
+  /// args : /////////////////////////////
+  ////////////////////////////////////////
+  inlib::args _args(a_args);
+
+  std::string fnh;
+  if(!_args.first_not_hyphen(fnh)) {
+    a_insh.warn(s_cmd+": no digis collection name given.");
+    return;
+  }
+  _args.remove(fnh);
+  float WCPMTRadius = 0.15f*float(CLHEP::m);  // PMTs (12-inch)
+  INLIB_ISHELL_GET_ARG_FLOAT(WCPMTRadius)
+
+  std::string sshape("bifacet");
+  INLIB_ISHELL_GET_ARG_STRING(shape)
+  
+  INLIB_ISHELL_GET_PLACEMENT_DYNAMIC
+  INLIB_ISHELL_ARGS_UNEXPECTED
+  ////////////////////////////////////////
+  ////////////////////////////////////////
+  ////////////////////////////////////////
+
+  G4VDigiCollection* collection = exlib::geant4::get_digis_collection(a_insh.out(),*rmgr,fnh);
+  if(!collection) {
+    a_insh.warn(s_cmd+": digis collection "+inlib::sout(fnh)+" not found.");
+    return;
+  }
+
+  exlib::geant4::transform _tsf;
+  inlib::colorf color;
+
+  size_t number = collection->GetSize();
+  for(size_t index=0;index<number;index++) {
+    G4VDigi* obj = collection->GetDigi(index);
+    if(!obj) continue;
+#ifdef USE_ATTDEF
+    G4LogicalVolume* lv = exlib::geant4::get_logical_volume(*obj); // The obj must have the "LV" and "TSF" AttDef.
+    if(!lv) {
+      a_insh.warn(s_cmd+": digi without G4LogicalVolume.");
+      continue;
+    }
+    G4Transform3D* tsf = exlib::geant4::get_transform3D(*obj);
+    if(!tsf) {
+      a_insh.warn(s_cmd+": digi without G4Transform3D.");
+      continue;
+    }
+    _tsf = *tsf;
+    G4VSolid* solid = lv->GetSolid();
+    if(!solid) {
+      a_insh.warn(s_cmd+": digi without G4Solid.");
+      continue;
+    }
+    //G4Material* material = lv->GetMaterial();
+    G4Colour _color;
+    if(exlib::geant4::get_color(*obj,_color)) {
+      color.set_value
+        (float(_color.GetRed()),float(_color.GetGreen()),float(_color.GetBlue()),float(_color.GetAlpha()));
+    } else {
+      color = inlib::colorf_default();
+    }
+#else //!USE_ATTDEF
+    MEMPHYS::WCDigi* _obj = dynamic_cast<MEMPHYS::WCDigi*>(obj);
+    if(!_obj) {
+      a_insh.warn(s_cmd+": G4VDigi is not a MEMPHYS::WCDigi.");
+      continue;
+    }    	
+    G4LogicalVolume* lv = _obj->GetLogicalVolume();
+    if(!lv) {
+      a_insh.warn(s_cmd+": digi without G4LogicalVolume.");
+      continue;
+    }
+    G4VSolid* solid = lv->GetSolid();
+    if(!solid) {
+      a_insh.warn(s_cmd+": digi without G4Solid.");
+      continue;
+    }
+    const G4Transform3D& tsf = _obj->GetTransform();
+    _tsf = tsf;
+    const G4Colour& _color = _obj->GetColour();
+    color.set_value
+      (float(_color.GetRed()),float(_color.GetGreen()),float(_color.GetBlue()),float(_color.GetAlpha()));
+#endif //USE_ATTDEF
+  
+    inlib::sg::separator* sep = new inlib::sg::separator;
+        
+   {inlib::sg::rgba* mat = new inlib::sg::rgba();
+    mat->color = color;
+    sep->add(mat);}
+      
+    // Build name (for picking) :
+    //std::string s;
+    //inlib::sprintf(s,128,"WCPMT/0x%lx",(unsigned long)obj);
+  
+   {inlib::sg::matrix* mtx = new inlib::sg::matrix;
+    _tsf.set_matrix(mtx->mtx.value());
+    mtx->mul_translate(0,0,WCPMTRadius*0.05f); //applied first.
+    sep->add(mtx);}
+
+    if(sshape=="ring") {
+      inlib::sg::ring* shape = new inlib::sg::ring;
+      shape->rmin = 0.0f;
+      shape->rmax = WCPMTRadius*0.45f;
+      sep->add(shape);
+    } else if(sshape=="tube") {
+      // digi tube inside the hit tube :
+      inlib::sg::tube* shape = new inlib::sg::tube;
+      shape->height = WCPMTRadius*2.0f;
+      shape->rmin = 0.0f;
+      shape->rmax = WCPMTRadius*0.45f;
+      sep->add(shape);
+    } else {
+      // digi facet in front of the hit facet :
+      inlib::sg::bifacet* shape = new inlib::sg::bifacet;
+      shape->width = 2.0f*WCPMTRadius*0.45f;
+      shape->height = 2.0f*WCPMTRadius*0.45f;
+      shape->depth = 2.0f*WCPMTRadius*0.02f;
+      sep->add(shape);
+    }
+  
+    INLIB_ISHELL_SEP_PLACEMENT
+  }
+  
+}
+
+}
+
+#include <inlib/omanager>
+#include <inlib/histo/h1d>
+
+namespace MEMPHYS_vis {
+
+inline void insh_app_hits_fill(inlib::ishell& a_insh,const std::vector<std::string>& a_args,inlib::omanager& a_mgr) {
+  static const std::string s_cmd("app_hits_fill");
+  
+  //////////////////////////////////////
+  //////////////////////////////////////
+  //////////////////////////////////////
+  G4RunManager* rmgr = G4RunManager::GetRunManager();
+  if(!rmgr) {
+    a_insh.warn(s_cmd+": G4RunManager::GetRunManager() is null.");
+    return;
+  }
+
+  ////////////////////////////////////////
+  /// args : /////////////////////////////
+  ////////////////////////////////////////
+  inlib::args _args(a_args);
+
+  std::string fnh;
+  if(!_args.first_not_hyphen(fnh)) {
+    a_insh.warn(s_cmd+": no hits collection name given.");
+    return;
+  }
+  _args.remove(fnh);
+
+  std::string shisto;
+  INLIB_ISHELL_GET_ARG_STRING(histo)
+
+  bool reset;
+  INLIB_ISHELL_IS_ARG(reset)
+
+  INLIB_ISHELL_ARGS_UNEXPECTED
+  //////////////////////////////////////
+  //////////////////////////////////////
+  //////////////////////////////////////
+  if(shisto.empty()) {
+    a_insh.warn(s_cmd+": no histo name given.");
+    return;
+  }
+  inlib::histo::h1d* _h = a_mgr.find_object<inlib::histo::h1d>(shisto);
+  if(!_h) {
+    a_insh.warn(s_cmd+": managed histo "+inlib::sout(shisto)+" not found.");
+    return;
+  }
+  
+  G4VHitsCollection* collection = exlib::geant4::get_hits_collection(a_insh.out(),*rmgr,fnh);
+  if(!collection) {
+    a_insh.warn(s_cmd+": hits collection "+inlib::sout(fnh)+" not found.");
+    return;
+  }
+
+  size_t number = collection->GetSize();
+
+  //m_out << "MEMPHYS_vis::main::visualize_hits_collection : #hits " << number << std::endl;
+  if(reset) _h->reset();
+
+  for(size_t index=0;index<number;index++) {
+    G4VHit* obj = collection->GetHit(index);
+    if(!obj) continue;
+    MEMPHYS::WCHit* _obj = dynamic_cast<MEMPHYS::WCHit*>(obj);
+    if(!_obj) {
+      a_insh.warn(s_cmd+": G4VHit is not a MEMPHYS::WCHit.");
+      continue;
+    }
+    _h->fill(_obj->GetTotalEdep()/CLHEP::eV);
+  }
+}
+
+}
+
+///////////////////////////////////////////////////
+///////////////////////////////////////////////////
+///////////////////////////////////////////////////
+#include <inlib/insh/ishell_args_gui_viewer_cmd>
+#include <inlib/insh/ishell_args_omanager_cmd>
+
+#define MEMPHYS_VIS_INSH_ADDS(a__insh,a__viewer)\
+  INLIB_INSH_ADD_ISHELL_ARGS_GUI_VIEWER_CMD(a__insh,a__viewer,app_vis_beam_and_target,\
+    MEMPHYS_vis::insh_app_vis_beam_and_target,\
+"app_vis_beam_and_target: app_vis_beam_and_target\n\
+  Visualize beam and the target.\n\
+  Example:\n\
+    app_vis_beam_and_target\n\
+")\
+  INLIB_INSH_ADD_ISHELL_ARGS_GUI_VIEWER_CMD(a__insh,a__viewer,app_vis_trajectories_end_direction,\
+    MEMPHYS_vis::insh_app_vis_trajectories_end_direction,\
+"app_vis_trajectories_end_direction: app_vis_trajectories_end_direction\n\
+  Example:\n\
+    app_vis_trajectories_end_direction\n\
+")\
+  INLIB_INSH_ADD_ISHELL_ARGS_GUI_VIEWER_CMD(a__insh,a__viewer,app_vis_hits_collection,\
+    MEMPHYS_vis::insh_app_vis_hits_collection,\
+"app_vis_hits_collection: app_vis_hits_collection collection\n\
+  Example:\n\
+    app_vis_hits_collection WCPMT\n\
+")\
+  INLIB_INSH_ADD_ISHELL_ARGS_GUI_VIEWER_CMD(a__insh,a__viewer,app_vis_digis_collection,\
+    MEMPHYS_vis::insh_app_vis_digis_collection,\
+"app_vis_digis_collection: app_vis_digis_collection collection\n\
+  Example:\n\
+    app_vis_digis_collection WCDigitizedCollection\n\
+")\
+  INLIB_INSH_ADD_ISHELL_ARGS_OMANAGER_CMD(a__insh,(a__viewer).get_omanager(),app_hits_fill,\
+    MEMPHYS_vis::insh_app_hits_fill,\
+"app_hits_fill: app_hits_fill [-histo,-reset] collection\n\
+  Example:\n\
+    app_hits_fill -reset -histo=edep WCPMT\n\
+")
+  
+#endif
