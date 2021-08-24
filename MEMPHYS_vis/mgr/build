@@ -32,8 +32,6 @@ done
 
 . ${bush_home}/app_header_use
 
-#app_exe=MEMPHYS_vis #no, it complicates app packing for distribution. (exe must have same name than overall app name).
-
 #//////////////////////////////////////////////////////
 #//////////////////////////////////////////////////////
 #//////////////////////////////////////////////////////
@@ -44,8 +42,28 @@ if [ ${build_sdk_android} = "yes" ] ; then
 fi
 
 if [ ${build_visual} = "yes" ] ; then
-  cppflags="${cppflags} -bigobj"
   cppflags="${cppflags} -DNOMINMAX" #disconnect the cpp macros min,max in windows.h
+
+  cppflags="${cppflags} -I../../MEMPHYS/MEMPHYS -I../../MEMPHYS/source" # to bypass include not found because of uppercase in app name.
+fi
+
+cppfiles="${cppfiles} ${inlib_home}/inlib/yacc/cexpr_lexer.cpp"
+cppfiles="${cppfiles} ${inlib_home}/inlib/yacc/cexpr_eval.cpp"
+
+#//////////////////////////////////////////////////////
+#//////////////////////////////////////////////////////
+#//////////////////////////////////////////////////////
+if [ ${build_x11} = yes ] ; then
+  cppflags="${cppflags} -DEXLIB_APP_HAS_TERM -DEXLIB_APP_TERM_INSH"
+  use_Getline=yes
+fi
+if [ ${build_sdk_mac} = yes ] ; then
+  cppflags="${cppflags} -DEXLIB_APP_HAS_TERM -DEXLIB_APP_TERM_INSH"
+  use_Getline=yes
+fi
+if [ ${build_visual} = yes ] ; then
+  cppflags="${cppflags} -DEXLIB_APP_HAS_TERM -DEXLIB_APP_TERM_INSH"
+  use_Getline=yes
 fi
 
 #//////////////////////////////////////////////////////
@@ -59,6 +77,7 @@ use_csz=yes
 
 . ./use_geant4
 
+. ${bush_home}/use/Getline
 . ${bush_home}/use/csz
 . ${bush_home}/use/zip
 . ${bush_home}/app_trailer_use

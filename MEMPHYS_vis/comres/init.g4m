@@ -1,8 +1,7 @@
 #
 #Choose Primary Generator type
 /mygen/generator muline
-#/mygen/vecfile inputEventfile
-/mygen/vecfile input.memphys # for Android devices.
+/mygen/vecfile input.memphys
 #/mygen/generator normal
 #
 

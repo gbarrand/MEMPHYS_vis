@@ -15,6 +15,6 @@
 
 typedef MEMPHYS_vis::main app_main_t;
 
-#import <exlib/app/Cocoa/main_mm>
+#import <exlib/app/Cocoa/main.mm>
 
-int main(int argc,char** argv) {return exlib_main<MEMPHYS_vis::context,MEMPHYS_vis::main>("MEMPHYS_vis",argc,argv);}
+int main(int argc,char** argv) {return exlib_main<MEMPHYS_vis::main>("MEMPHYS_vis",argc,argv);}

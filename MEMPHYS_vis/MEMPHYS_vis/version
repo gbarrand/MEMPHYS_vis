@@ -1,10 +1,13 @@
+// Copyright (C) 2010, Guy Barrand. All rights reserved.
+// See the file MEMPHYS_vis.license for terms.
+
 #ifndef MEMPHYS_vis_version
 #define MEMPHYS_vis_version
 
-#define MEMPHYS_VIS_MAJOR_VERSION 11
-#define MEMPHYS_VIS_MINOR_VERSION 2
+#define MEMPHYS_VIS_MAJOR_VERSION 12
+#define MEMPHYS_VIS_MINOR_VERSION 0
 #define MEMPHYS_VIS_PATCH_VERSION 0
-#define MEMPHYS_VIS_VERSION       "11.2.0"
-#define MEMPHYS_VIS_VERSION_VRP   "v11r2p0"
+#define MEMPHYS_VIS_VERSION       "12.0.0"
+#define MEMPHYS_VIS_VERSION_VRP   "v12r0p0"
 
 #endif

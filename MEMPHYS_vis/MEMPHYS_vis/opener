@@ -4,8 +4,7 @@
 #ifndef MEMPHYS_vis_opener
 #define MEMPHYS_vis_opener
 
-#include <inlib/sg/iopener>
-#include <inlib/path>
+#include <inlib/sg/gui_viewer>
 #include <inlib/signature>
 
 #include <MEMPHYS/PrimaryGeneratorAction.hh>
