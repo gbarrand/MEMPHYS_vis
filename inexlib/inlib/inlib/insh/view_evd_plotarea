@@ -1,0 +1,42 @@
+// Copyright (C) 2010, Guy Barrand. All rights reserved.
+// See the file inlib.license for terms.
+
+#ifndef inlib_insh_view_evd_plotarea
+#define inlib_insh_view_evd_plotarea
+
+#include "ishell"
+#include "view_evd"
+#include "plotarea"
+
+namespace inlib {
+
+inline void insh_scene_add_plots_clearer(ishell& a_insh,const std::vector<std::string>& a_args,sg::gui_viewer& a_gv) {
+  static const std::string s_cmd("scene_add_plots_clearer");
+  sg::view_evd* _evd = sg::cast_view_evd(a_gv);
+  if(!_evd) {a_insh.warn(s_cmd+": bad view_evd cast.");return;}
+  sg::plotarea* _plotarea = cast_plotarea(a_gv);  
+  if(!_plotarea) {a_insh.warn(s_cmd+": bad plotarea cast.");return;}
+  args _args(a_args);
+  if(_args.is_arg("-dynamic")) {
+    _evd->dynamic_sg().add(_plotarea->create_plots_clearer_holder());
+  } else {
+    _evd->static_sg().add(_plotarea->create_plots_clearer_holder());
+  }
+}
+
+}
+
+#include "ishell_args_gui_viewer_cmd"
+
+#define INLIB_INSH_VIEW_EVD_PLOTAREA_ADDS(a__insh,a__gv)\
+  INLIB_INSH_ADD_ISHELL_ARGS_GUI_VIEWER_CMD(a__insh,a__gv,scene_add_plots_clearer,\
+    inlib::insh_scene_add_plots_clearer,\
+"scene_add_plots_clearer: scene_add_plots_clearer [-dynamic]\n\
+  Add a plots clearer in the static scene graph.\n\
+  -dynamic to add in the dynamic scene graph.\n\
+  Example :\n\
+    scene_add_plots_clearer\n\
+")
+
+
+#endif
