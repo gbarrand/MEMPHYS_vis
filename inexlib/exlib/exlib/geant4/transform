@@ -6,7 +6,7 @@
 
 #include <G4Transform3D.hh>
 
-#include <inlib/mat4d>
+#include <inlib/lina/mat4d>
 
 #ifdef INLIB_MEM
 #include <inlib/mem>
