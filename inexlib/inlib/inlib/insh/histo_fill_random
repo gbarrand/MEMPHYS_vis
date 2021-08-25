@@ -36,7 +36,7 @@ inline bool get_random(rtausmed& a_rand,double a_xmin,double a_xmax,size_t a_ste
   //same logic as CERN-ROOT/TH1.cxx/GetRandom().
   double r = a_rand.shoot();
   unsigned long ibin = binary_search(a_steps,vec_data<double>(a_integral),r);
-  if((ibin<0)||(ibin>=a_steps)) return false;
+  if(ibin>=a_steps) return false;
   double step = (a_xmax-a_xmin)/a_steps;
   double x = a_xmin+ibin*step;
   if(r>a_integral[ibin]) {
