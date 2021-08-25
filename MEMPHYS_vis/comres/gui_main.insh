@@ -65,6 +65,8 @@ cmd="${cmd} -item='utils:tools.jpg:gui_utils.insh'"
 
 cmd="${cmd} -item='icon:white.jpg:icon.insh'"
 
+cmd="${cmd} -item='about:icon.jpg:about.insh'"
+
 if [ `sys_device_has_stop_app_button` = false ] ; then
   cmd="${cmd} -item='exit:application_exit.jpg:gui_set_to_exit'"
 fi
