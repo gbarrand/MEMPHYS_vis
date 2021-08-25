@@ -10,14 +10,21 @@
 
 namespace inlib {
 
-inline void insh_scene_send_sg(ishell& a_insh,const std::vector<std::string>&,sg::gui_viewer& a_gv,sg::node& a_sg) {
-  sg::view_sg_client* _view_sg_client = safe_cast<sg::viewer,sg::view_sg_client>(a_gv);
-  if(!_view_sg_client) {
-    a_insh.warn("scene_send_sg : viewer is not a inlib::sg::view_sg_client.");
+inline void insh_scene_send_sg(const std::string& a_cmd,ishell& a_insh,const std::vector<std::string>&,sg::gui_viewer& a_gv,sg::node& a_sg) {
+  sg::view_sg_client* _wc = sg::cast_view_sg_client(a_gv);
+  if(!_wc) {
+    a_insh.warn(a_cmd+": viewer is not a inlib::sg::view_sg_client.");
+    return;
+  }
+  if(!_wc->is_connected()) {
+    a_insh.warn(a_cmd+": application not connected.");
     return;
   }
   args opts;
-  _view_sg_client->send_sg(a_sg,opts);
+  if(!_wc->send_sg(a_sg,opts)) {
+    a_insh.warn(a_cmd+": send_sg() failed.");
+    return;
+  }
 }
 
 inline const std::string& insh_scene_send_static_help() {

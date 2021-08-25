@@ -94,10 +94,12 @@ inline void insh_scene_write_dynamic_to_bsg(ishell& a_insh,const std::vector<std
 }
 
 inline void insh_scene_send_static(ishell& a_insh,const std::vector<std::string>& a_args,sg::view_evd& a_evd) {
-  insh_scene_send_sg(a_insh,a_args,a_evd.gv(),a_evd.static_sg());
+  static const std::string s_cmd("scene_send_static");
+  insh_scene_send_sg(s_cmd,a_insh,a_args,a_evd.gv(),a_evd.static_sg());
 }
 inline void insh_scene_send_dynamic(ishell& a_insh,const std::vector<std::string>& a_args,sg::view_evd& a_evd) {
-  insh_scene_send_sg(a_insh,a_args,a_evd.gv(),a_evd.dynamic_sg());
+  static const std::string s_cmd("scene_send_dynamic");
+  insh_scene_send_sg(s_cmd,a_insh,a_args,a_evd.gv(),a_evd.dynamic_sg());
 }
 
 inline void insh_scene_static_to_vertices(ishell& a_insh,const std::vector<std::string>& a_args,sg::view_evd& a_evd) {
