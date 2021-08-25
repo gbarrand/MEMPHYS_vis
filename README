@@ -3,11 +3,10 @@
  ///////////////////////////////////////////////////////////////////////////////////////////////////////
  IMPORTANT : if building from a git clone of 
      https://github.com/gbarrand/MEMPHYS_vis.git
- before building you have to bring the file : g4ndl_4_5.zip from one of the release (for exa the 11.2.0)
- and deposit it under :
+ before building you have to bring the file : g4ndl_4_5.zip from the release area and deposit it under:
      MEMPHYS_vis/MEMPHYS_vis/comres
  You may try the URL:
-     https://github.com/gbarrand/MEMPHYS_vis/releases/download/11.2.0/g4ndl_4_5.zip
+     https://github.com/gbarrand/MEMPHYS_vis/releases/download/12.0.0/g4ndl_4_5.zip
  
  It appears that this file exceeds the 100 Mbytes limit of github and can't go in the repository, but it
  is definitely needed to run the app and have to go also in the built distribution zip files. Then be sure
