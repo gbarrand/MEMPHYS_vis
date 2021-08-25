@@ -1,5 +1,5 @@
 
-// must be compiled with -std=c++17
+// must be compiled with -std=c++17 (/std:c++17 if using cl.exe).
 
 #include <filesystem>
 
