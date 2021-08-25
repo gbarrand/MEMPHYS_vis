@@ -3,6 +3,7 @@
 - startup.insh, event.insh.
 - cleanup MEMPHYS_vis/main to have mainly MEMPHYS sim init and declaration of insh commands.
 - have insh and -terminal mode.
+- MEMPHYS itself: a lot of .cpp code put in the .hh to be a maximum "pure header".
 
 11.2.0 :
 - have inexlib/ourex/geant4.10.03.p01 : clearly users have problems to build
