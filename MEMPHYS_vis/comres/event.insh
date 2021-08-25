@@ -19,4 +19,6 @@ app_vis_digis_collection WCDigitizedCollection
 histo_reset edep
 app_hits_fill -histo=edep WCPMT
 
+plots_touch_plotters
+
 unset radius m
