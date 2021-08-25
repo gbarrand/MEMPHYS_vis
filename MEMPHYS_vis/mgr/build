@@ -5,6 +5,13 @@
 . ${bush_home}/args
 . ${bush_home}/g4args
 
+if [ ! -f ../comres/g4ndl_4_5.zip ] ; then
+  echo 'You have to get g4ndl_4_5.zip and put it in the ../comres directory.'
+  echo 'This file can be get from the gbarrand/github/MEMPHYS_vis/11.2.0 release area:'
+  echo '  https://github.com/gbarrand/MEMPHYS_vis/releases/download/11.2.0/g4ndl_4_5.zip'
+  exit    
+fi    
+
 #if [ `uname` = Darwin ] ; then
 #  if [ ${build_geant4_10x} = "yes" ] ; then
 #    # to rm ld warning when linking ourex geant4 10.03.p01.  
@@ -16,6 +23,7 @@
 #/// specific args : //////////////////
 #//////////////////////////////////////
 build_use_lib=no
+
 items="${build_args}"
 build_args=
 for item in ${items} ; do
@@ -35,6 +43,7 @@ done
 #//////////////////////////////////////////////////////
 #//////////////////////////////////////////////////////
 #//////////////////////////////////////////////////////
+
 cppflags="${cppflags} -I../../MEMPHYS"
 
 if [ ${build_sdk_android} = "yes" ] ; then
