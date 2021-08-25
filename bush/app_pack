@@ -109,12 +109,12 @@ fi
 
 items=
 items="${items} freetype jpeg png expat zip zlib csz"
-#items="${items} glutess"
 if [ ${app} = g4exa       ] ; then items="${items} AIDA";fi
 if [ ${app} = g4view      ] ; then items="${items} pythia8";fi
 if [ ${app} = TouchSky    ] ; then items="${items} cfitsio hdf5 wcslib lua";fi
 if [ ${app} = gopaw       ] ; then items="${items} KUIP Getline Python hdf5 cfitsio";fi
 if [ ${app} = EsbRootView ] ; then items="${items} Getline";fi
+if [ ${app} = MEMPHYS_vis ] ; then items="${items} Getline";fi
 if [ ${app} = ioda     ] ; then
   items="${items} CoinGL HEPVis"
   items="${items} graphviz Python lua"
