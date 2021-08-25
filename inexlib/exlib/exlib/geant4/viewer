@@ -57,8 +57,6 @@ public:
     insh().exec_line_reset_to_stop("gui_main.insh");
     return pop_list(false); //important: have false to not delete the popped item.
   }
-//virtual void visualize_event() {} //executed from state::Notify().
-  virtual void event_end() {} //executed from state::Notify().
 public:
   INLIB_SCLASS(exlib::geant4::viewer)
   virtual void* cast(const std::string& a_class) const {
@@ -188,8 +186,11 @@ protected:
       } else if(previousState==G4State_EventProc && aRequestedState==G4State_GeomClosed) {
         //exec event end.
         //::printf("debug : event end ===================\n");
-        m_gv.event_end();
-
+	
+        m_gv.insh().exec_line_reset_to_stop("event.insh");
+        if(m_gv.insh().to_stop()) {}
+	
+	/*
        {inlib::sg::plots* plots = m_gv.get_plots();
         if(plots && plots->has_data()) {
           plots->touch_plotters();
@@ -227,12 +228,8 @@ protected:
 
           }
         }}
+	*/
 
-      //m_gv.visualize_event();
-      
-        m_gv.insh().exec_line_reset_to_stop("event.insh");
-        if(m_gv.insh().to_stop()) {}
-	
         m_gv.win_render();
 
       //if(scan_mode) m_gv.steer();

@@ -379,19 +379,6 @@ inline void insh_g4_output(inlib::ishell& a_insh,const std::vector<std::string>&
     g4_material_ls\n\
 ")\
 \
-  INLIB_INSH_ADD_ISHELL_ARGS_GEANT4_OUTPUT_CMD(a__insh,(a__holder).m_g4_output,g4_output,\
-    exlib::insh_g4_output,\
-"g4_output: g4_output enable/disable\n\
-  Enable, disable Geant4 output.\n\
-  Example:\n\
-    g4_output enable\n\
-    g4_apply_command '/control/verbose 2'\n\
-    g4_apply_command '/run/verbose 2'\n\
-    g4_beam_on\n\
-    g4_output disable\n\
-    g4_beam_on\n\
-")\
-\
   INLIB_INSH_ADD_ISHELL_ARGS_GUI_VIEWER_CMD(a__insh,a__holder,g4_vis_geometry,\
     exlib::insh_g4_vis_geometry,\
 "g4_vis_geometry: g4_vis_geometry\n\
