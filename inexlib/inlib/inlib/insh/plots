@@ -28,10 +28,8 @@ namespace inlib {
 inline void insh_plots_touch_plotters(ishell& a_insh,const std::vector<std::string>& a_args,sg::gui_viewer& a_gv) {
   static const std::string s_cmd("plots_touch_plotters");
   sg::plots* _plots = sg::search_plots<sg::plots>(a_gv);
-  if(!_plots) {
-    a_insh.warn(s_cmd+": no inlib::sg::plots node found.");
-    return;
-  }
+  if(!_plots) return; //have no warning.
+  if(!_plots->has_data()) return;
   _plots->touch_plotters();
 }
 
