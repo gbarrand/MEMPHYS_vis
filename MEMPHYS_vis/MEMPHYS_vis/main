@@ -57,21 +57,21 @@
 
 #define CHECK_ENV(a__name) \
   if(!inlib::is_env(#a__name)) {\
-    a_out << "pre_main : env variable " << #a__name << " not defined." << std::endl;\
+    a_out << "MEMPHYS_vis::main: env variable " << #a__name << " not defined." << std::endl;\
     return;\
   }
   
 #define DUMP_ENV(a__name) \
  {std::string value;\
   if(!inlib::get_env(#a__name,value)) {\
-    a_out << "pre_main : get_env (" << inlib::sout(#a__name) << " failed." << std::endl;\
+    a_out << "MEMPHYS_vis::main: get_env (" << inlib::sout(#a__name) << " failed." << std::endl;\
     return;\
   }\
-  a_out << "pre_main : get_env " << inlib::sout(#a__name) << ", value " << inlib::sout(value) << std::endl;}
+  a_out << "MEMPHYS_vis::main : get_env " << inlib::sout(#a__name) << ", value " << inlib::sout(value) << std::endl;}
   
 #define UNFOLD_RES_FILE(a__zip,a__env,a__tmp_prefix,a__dir) \
-  if(!exlib::unfold(a_out,a_data_dir,a_res_dir,a_tmp_dir,m_tmp_dirs,a__zip,exlib::geant4::s_##a__env(),a__tmp_prefix,a__dir)) {\
-    a_out << "pre_main : exlib::unfold() failed : zip file " << inlib::sout(a__zip)\
+  if(!exlib::unfold(a_out,a_doc_dir,a_res_dir,a_tmp_dir,m_tmp_dirs,a__zip,exlib::geant4::s_##a__env(),a__tmp_prefix,a__dir)) {\
+    a_out << "MEMPHYS_vis::main: exlib::unfold() failed : zip file " << inlib::sout(a__zip)\
           << ", env " << inlib::sout(exlib::geant4::s_##a__env()) << "." << std::endl;\
     return;\
   }
@@ -82,7 +82,8 @@
 
 namespace MEMPHYS_vis {
 
-class main: public exlib::geant4::viewer {
+class main: public exlib::geant4::output, public exlib::geant4::viewer {
+  typedef exlib::geant4::output parent_output;
   typedef exlib::geant4::viewer parent_viewer;
 public:
   static const std::string& s_version() {
@@ -105,24 +106,38 @@ public:
        inlib::sg::render_manager& a_gl_mgr,
        const inlib::sg::base_freetype& a_ttf,
        const inlib::sg::selection& a_selection,
-       const std::string& a_data_dir,
+       const std::string& a_doc_dir,
        const std::string& a_res_dir,
        const std::string& a_out_dir,
        const std::string& a_tmp_dir,
        bool a_verbose,
        unsigned int a_mem_limit)
-  :parent_viewer("MEMPHYS_vis",MEMPHYS_VIS_VERSION,
+  :parent_output(a_out,a_verbose?true:false)
+  ,parent_viewer("MEMPHYS_vis",MEMPHYS_VIS_VERSION,
                  a_out,a_gl_mgr,a_ttf,a_selection,
-		 a_data_dir,a_res_dir,a_out_dir,a_tmp_dir,a_verbose,a_mem_limit)
-  ,m_g4_output(a_out)
+		 a_doc_dir,a_res_dir,a_out_dir,a_tmp_dir,a_verbose,a_mem_limit)
   ,m_run_manager(0)
   ,m_analysis(0)
   {
     //////////////////////////////////////
-    //////////////////////////////////////
+    /// insh: ////////////////////////////
     //////////////////////////////////////
     insh_app_add_cmds();
     EXLIB_INSH_G4_ADDS(insh(),*this)
+
+    INLIB_INSH_ADD_ISHELL_ARGS_GEANT4_OUTPUT_CMD(insh(),*this,g4_output,
+      exlib::insh_g4_output,
+"g4_output: g4_output enable/disable\n\
+  Enable, disable Geant4 output.\n\
+  Example:\n\
+    g4_output enable\n\
+    g4_apply_command '/control/verbose 2'\n\
+    g4_apply_command '/run/verbose 2'\n\
+    g4_beam_on\n\
+    g4_output disable\n\
+    g4_beam_on\n\
+")
+
     INLIB_INSH_ADD_ISHELL_ARGS_CMD(insh(),app_version,
       insh_app_version,
       "app_version: app_version\n  Print the application version.\n")
@@ -171,10 +186,6 @@ public:
     UNFOLD_RES_FILE(file,PYTHIA8DATA,s_MEMPHYS_vis_(),sdir);}
     CHECK_ENV(PYTHIA8DATA)
 #endif
-
-    // disconnect Geant4 output :
-    m_g4_output.disable_geant4_output();
-    if(a_verbose) m_g4_output.enable_geant4_output();
 
     m_run_manager = new G4RunManager;
     
@@ -234,15 +245,14 @@ public:
 protected:
   main(const main& a_from)
   :inlib::sg::ui(a_from)
+  ,parent_output(a_from.out(),true)
   ,parent_viewer(a_from)
-  ,m_g4_output(a_from.out())
   ,m_run_manager(0)
   ,m_analysis(0)
   {}
 private:
   main& operator=(const main&){return *this;}
 protected:
-  exlib::geant4::output m_g4_output;
   G4RunManager* m_run_manager;
   MEMPHYS::Analysis* m_analysis;
 };
